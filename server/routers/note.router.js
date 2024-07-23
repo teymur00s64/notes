@@ -3,9 +3,7 @@ const { noteController } = require('../controllers');
 const router = express.Router();
 
 
-router.get('/', noteController.findAll);
-
-router.get('/', noteController.findByUserId);
+router.get('/', noteController.findAllByUser);
 
 router.get('/:id', noteController.findNote);
 

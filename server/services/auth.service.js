@@ -2,9 +2,10 @@ const { encode } = require("../utils/jwt.util")
 const { findByUsername } = require("./user.service")
 
 
-const login = (params) =>{
+const login = async (params) =>{
     const {username, password} = params || {}
-    let user = findByUsername(username)
+    let user = await findByUsername(username)
+
     if(!user){
         throw new Error("username_not_found")
     }
@@ -13,10 +14,11 @@ const login = (params) =>{
     }
     
     const payload = {
-        userID: user.id
+        userId: user.id
     }
-    const token = encode(payload)
 
+    const token = encode(payload)
+    
     delete user.password
 
     return {

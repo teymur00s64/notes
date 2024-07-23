@@ -2,8 +2,8 @@ const { notesService } = require("../services");
 
 const createNote = async (req,res) =>{
     try {
-    let {user} = req;
-    let params = {...req.body, usedId: user.id}
+    const {user} = req
+    let params = {...req.body, userId: user.id}
     let note = await notesService.createNote(params)
     res.json( {
         status: true,
@@ -16,15 +16,11 @@ const createNote = async (req,res) =>{
     }
 };
 
-const findByUserId = async (req,res) =>{
-    const {user} = await notesService.findByUserId(user)
-    res.json(notes)
-}
-
-const findAll = async (req, res) =>{
+const findAllByUser = async (req, res) =>{
     try {
-        let {user} =req
-        let notes = await notesService.findAll(user.id)
+        const {user} =req
+        const param = user.id
+        let notes = await notesService.findAllByUser(param)
         res.json({notes})
     } catch (error) {
         res.status(500).json({
@@ -47,8 +43,9 @@ const findNote = async (req, res) =>{
 
 const updateNote = async (req, res) =>{
     try {
-        let {id} = req.params
-        let note = await notesService.updateNote(id ,req.body)
+        let {user} = req
+        let param = { ...req.params, userId: user.id ,...req.body}
+        let note = await notesService.updateNote(param)
         res.json( {
             note
         })} catch (error) {
@@ -61,7 +58,9 @@ const updateNote = async (req, res) =>{
 const deleteNote = async (req, res) =>{
     try{
     let {id} = req.params
-    let note = await notesService.deleteNote(id)
+    let {user} = req
+    let param = {userId: user.id}
+    let note = await notesService.deleteNote(id, param)
     res.json({note})
     } catch(error) {
         res.status(500).json({
@@ -72,7 +71,9 @@ const deleteNote = async (req, res) =>{
 
 const deleteAll = async (req, res) =>{
     try{
-    let note = await notesService.deleteAll()
+    let {user} = req
+    let param = {userId: user.id}    
+    let note = await notesService.deleteAll(param)
     res.json({note})
     } catch(error) {
         res.status(500).json({
@@ -84,9 +85,8 @@ const deleteAll = async (req, res) =>{
 module.exports = {
     createNote,
     findNote,
-    findAll,
+    findAllByUser,
     updateNote,
     deleteNote,
     deleteAll,
-    findByUserId
 };
