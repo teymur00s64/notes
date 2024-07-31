@@ -1,4 +1,4 @@
-const Notes = require("../models/Notes");
+const {Notes} = require("../models");
 
 const createNote = async (params) => {
     const {title, content, userId} = params || {}
@@ -22,7 +22,7 @@ const findAllByUser = async (userId) => {
 
 const updateNote = async (params) => {
     let {id,userId ,title , content} = params
-    const note = await Notes.findOne({where: {id} , userId})
+    const note = await Notes.findNote(id, userId)
     await note.update({title})
     await note.update({content})
 

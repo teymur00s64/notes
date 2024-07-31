@@ -1,15 +1,18 @@
-const User = require('./../models/User');
-
+const {User} = require('./../models');
+const {hashPass} = require('../utils/brcypt.util');
+const { AppError } = require('../errors');
 
 const createUser = async (params) => {
     const {username, password} = params;
 
     let existingUser = await findByUsername(username)
-    if(existingUser) throw new Error('User exists')
+    if(existingUser) throw new AppError('User exists')
+    
+    const hash = await hashPass(password)    
 
     let user = await User.create({
         username,
-        password
+        password: hash
     })
 };
 
